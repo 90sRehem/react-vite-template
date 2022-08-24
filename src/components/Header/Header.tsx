@@ -26,6 +26,7 @@ export function Header() {
     <Flex
       as="aside"
       pos="fixed"
+      zIndex={9999}
       w="full"
       bg={useColorModeValue("gray.200", "gray.800")}
       height="20"

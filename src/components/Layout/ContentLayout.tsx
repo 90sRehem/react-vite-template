@@ -14,8 +14,10 @@ export function ContentLayout({ children }: ContentLayoutProps) {
       bg={useColorModeValue("gray.100", "gray.900")}
       pl={navSize === "large" ? "52" : "20"}
       pt="20"
-      h="100vh"
+      h="full"
       w="full"
+      minH="100vh"
+      minW="100vw"
     >
       {children}
     </Stack>
