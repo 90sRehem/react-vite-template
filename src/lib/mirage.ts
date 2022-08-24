@@ -59,19 +59,27 @@ export function makeServer() {
         const attrs = JSON.parse(request.requestBody);
         const user = schema.findBy("user", { email: attrs.email });
         if (user?.email === attrs.email) {
-          return {
-            data: {
-              createdAt: user?.createdAt,
-              email: user?.email,
-              id: user?.id,
-              name: user?.name,
-              refreshToken: "string",
-              token: "string",
+          return new Response(
+            200,
+            {},
+            {
+              data: {
+                createdAt: user?.createdAt,
+                email: user?.email,
+                id: user?.id,
+                name: user?.name,
+                refreshToken: "string",
+                token: "string",
+              },
             },
-          };
+          );
         }
 
-        return null;
+        return new Response(
+          400,
+          {},
+          { success: false, message: "Usuário não encontrado." },
+        );
       });
 
       this.post("auth/register", (schema, request) => {

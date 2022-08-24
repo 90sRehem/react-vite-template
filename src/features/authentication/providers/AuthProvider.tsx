@@ -14,7 +14,7 @@ import {
 import { useMutation } from "@/lib/react-query";
 import { storage } from "@/utils";
 import { useToast } from "@chakra-ui/react";
-import { useNavigate } from "react-router-dom";
+import { AxiosError } from "axios";
 
 interface AuthProviderProps {
   children: ReactNode;
@@ -22,10 +22,7 @@ interface AuthProviderProps {
 
 interface AuthContextData {
   user: IAuthUser | null;
-  login: (
-    credentials: IAuthCredentials,
-    // onSuccess: () => void,
-  ) => Promise<void>;
+  login: (credentials: IAuthCredentials) => Promise<void>;
   logout: () => void;
   isAuthenticated: boolean;
   loading: boolean;
@@ -49,7 +46,6 @@ function getFromStorage(key: string) {
 }
 function AuthProvider({ children }: AuthProviderProps): JSX.Element {
   const toast = useToast();
-  const navigate = useNavigate();
   const [user, setUser] = useState<IAuthUser | null>(() => {
     const storagedUser = getFromStorage("user") as IAuthUser;
 
@@ -68,22 +64,28 @@ function AuthProvider({ children }: AuthProviderProps): JSX.Element {
     },
     {
       onError(error) {
-        console.log(error);
         toast({
-          title: "Error.",
-          description: "Something wrong happened.",
+          title: "Erro.",
+          description: error.response.data.message,
           status: "error",
           duration: 9000,
           isClosable: true,
+          position: "top-right",
         });
       },
       onSuccess(data, variables) {
         setUser(data as IAuthUser);
         if (variables.rememberMe) {
           storage.setItem({ key: "user", storageType: "local", values: data });
+        } else {
+          storage.setItem({
+            key: "user",
+            storageType: "session",
+            values: data,
+          });
         }
-        storage.setItem({ key: "user", storageType: "session", values: data });
       },
+      useErrorBoundary: false,
     },
   );
 
@@ -92,7 +94,6 @@ function AuthProvider({ children }: AuthProviderProps): JSX.Element {
       try {
         await mutation.mutateAsync(data);
         mutation.reset();
-        navigate("/");
       } catch (error) {
         console.log(error);
       }
