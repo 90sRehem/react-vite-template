@@ -2,13 +2,6 @@ import {
   Flex,
   Heading,
   Spinner,
-  Table,
-  Thead,
-  Tr,
-  Th,
-  Tbody,
-  Td,
-  Skeleton,
   Tooltip,
   IconButton,
   Icon,
@@ -18,20 +11,15 @@ import {
 import { RiPencilLine, RiDeleteBin5Line } from "@/lib/react-icons";
 import { useState } from "react";
 import { Pagination } from "@/components";
+import { Table } from "@/components/Table";
 import { ErrorBoundary } from "react-error-boundary";
+import { IUser } from "@/types";
 import { useUsers } from "../api";
-
-// const isLoading = false;
-// const isFetching = false;
-const isWiderVersion = true;
 
 function ErrorFallback() {
   return (
-    <div
-      className="text-red-500 w-screen h-screen flex flex-col justify-center items-center"
-      role="alert"
-    >
-      <Heading>:( </Heading>
+    <div role="alert">
+      <Heading>Ooops, something went wrong :( </Heading>
       <Button onClick={() => window.location.assign(window.location.origin)}>
         Refresh
       </Button>
@@ -41,12 +29,12 @@ function ErrorFallback() {
 
 export function UsersList() {
   const [page, setPage] = useState(1);
-  const [registersPerPage, setRegistersPerPage] = useState(10);
-  const { data, isLoading, isFetching, error } = useUsers({
+  const [registersPerPage] = useState(20);
+  const { data, isLoading, isFetching } = useUsers({
     page,
     limit: registersPerPage,
   });
-  // console.log(data);
+
   return (
     <Box>
       <Flex w="100%" my="6" maxWidth={1480} mx="auto" px="6">
@@ -60,54 +48,37 @@ export function UsersList() {
             </Heading>
           </Flex>
 
-          <ErrorBoundary FallbackComponent={ErrorFallback}>
-            <Table colorScheme="whiteAlpha">
-              <Thead>
-                <Tr>
-                  <Th>Id</Th>
-                  <Th>Usuário</Th>
-                  <Th>Email</Th>
-                  {isWiderVersion && <Th>Data de cadastro</Th>}
-                  <Th textAlign="center" width="8">
-                    Ação
-                  </Th>
-                </Tr>
-              </Thead>
-              <Tbody>
-                {isLoading && (
-                  <Tr>
-                    <Td colSpan={3}>
-                      <Skeleton height="4" />
-                    </Td>
-                  </Tr>
-                )}
-                {data?.users && data.users.length > 0 ? (
-                  data?.users.map(item => (
-                    <Tr key={item.id}>
-                      <Td>{item.id}</Td>
-                      <Td>{item.name}</Td>
-                      <Td>{item.email}</Td>
-                      {isWiderVersion && <Td>{item.createdAt}</Td>}
-                      <Td textAlign="center">
-                        <Flex>
+          <Box rounded="md" bg="gray.200" boxShadow="md" p="2">
+            <ErrorBoundary FallbackComponent={ErrorFallback}>
+              <Table<IUser>
+                columns={[
+                  { title: "id", field: "id" },
+                  { title: "name", field: "name" },
+                  { title: "email", field: "email" },
+                  { title: "createdAt", field: "createdAt" },
+                  {
+                    title: "ações",
+                    field: "id",
+                    // eslint-disable-next-line react/no-unstable-nested-components
+                    Cell({ entry: { id } }) {
+                      return (
+                        <Flex alignItems="center" justifyContent="center">
                           <Tooltip
                             hasArrow
                             label="Editar"
                             aria-label="Edit button"
-                            bg="pGray.400"
                           >
                             <IconButton
                               mr="2"
                               as="a"
                               size="sm"
                               fontSize="small"
-                              colorScheme="orange"
+                              colorScheme="blue"
                               icon={<Icon as={RiPencilLine} fontSize="16" />}
                               aria-label="Edit button"
-                              onClick={
-                                () => { }
-                                // handleClickEditButton(item, item.id)
-                              }
+                              onClick={() => {
+                                /* TODO */
+                              }}
                             >
                               Editar
                             </IconButton>
@@ -117,43 +88,41 @@ export function UsersList() {
                             hasArrow
                             label="Excluir"
                             aria-label="Delete button"
-                            bg="pGray.400"
                           >
                             <IconButton
                               as="a"
                               size="sm"
                               fontSize="small"
-                              colorScheme="orange"
+                              colorScheme="red"
                               icon={
                                 <Icon as={RiDeleteBin5Line} fontSize="16" />
                               }
                               aria-label="Delete button"
+                              onClick={() => {
+                                /* TODO */
+                              }}
                             >
                               Excluir
                             </IconButton>
                           </Tooltip>
                         </Flex>
-                      </Td>
-                    </Tr>
-                  ))
-                ) : (
-                  <Tr>
-                    <Td textAlign="center" colSpan={3}>
-                      vazio
-                    </Td>
-                  </Tr>
-                )}
-              </Tbody>
-            </Table>
-            {data?.users && (
-              <Pagination
-                totalCountOfRegisters={data.totalCount}
-                registersPerPage={registersPerPage}
-                currentPage={page}
-                onPageChange={setPage}
+                      );
+                    },
+                  },
+                ]}
+                data={data?.users as IUser[]}
+                loadingData={isLoading}
               />
-            )}
-          </ErrorBoundary>
+              {data?.users && (
+                <Pagination
+                  totalCountOfRegisters={data.totalCount}
+                  registersPerPage={registersPerPage}
+                  currentPage={page}
+                  onPageChange={setPage}
+                />
+              )}
+            </ErrorBoundary>
+          </Box>
         </Box>
       </Flex>
     </Box>
