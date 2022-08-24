@@ -33,6 +33,7 @@ export interface IAuthState {
   status: "idle" | "loading" | "error";
   getAuthUser(): IAuthUser | null;
   authUser: IAuthUser | null;
+  setAuthUser(data: IAuthUser | null): void;
   isAuthenticated(): boolean;
   login: (credentials: IAuthCredentials) => Promise<void>;
   logout: () => void;

@@ -8,8 +8,8 @@ import {
   useColorModeValue,
   Flex,
 } from "@/lib/chakra-ui";
+import { useAuth } from "@/features/authentication";
 import { IAuthCredentials } from "../types";
-import { useAuthStore } from "../stores/authStore";
 
 const schema = z.object({
   email: z
@@ -25,7 +25,7 @@ type LoginFormProps = {
 };
 
 export function LoginForm({ title }: LoginFormProps) {
-  const login = useAuthStore(state => state.login);
+  const { login } = useAuth();
 
   async function handleSubmit(formData: IAuthCredentials) {
     await login(formData);

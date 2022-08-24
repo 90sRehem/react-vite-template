@@ -1,6 +1,13 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { IAuthResponse } from "@/features/authentication";
-import { ActiveModelSerializer, createServer, Factory, Model } from "miragejs";
+import {
+  ActiveModelSerializer,
+  createServer,
+  Factory,
+  Model,
+  Response,
+} from "miragejs";
+import { faker } from "@faker-js/faker";
 
 type User = {
   name: string;
@@ -19,29 +26,30 @@ export function makeServer() {
     factories: {
       user: Factory.extend({
         name() {
-          return "jonathan rehem";
+          return faker.name.fullName();
         },
         email() {
-          return "jonathan.de.oliveira@live.com";
+          return faker.internet.email();
         },
         createdAt() {
-          return new Date();
+          return faker.date.recent(10);
         },
-        token() {
-          return "string";
-        },
-        refreshToken() {
-          return "string";
-        },
+        // token() {
+        //   return "string";
+        // },
+        // refreshToken() {
+        //   return "string";
+        // },
       }),
     },
-    seeds(_server) {
-      _server.create("user", {
+    seeds(schema) {
+      schema.create("user", {
         id: "1",
         email: "jonathan.de.oliveira@live.com",
         name: "jonathan rehem",
         createdAt: new Date(),
       });
+      schema.createList("user", 100);
     },
     routes() {
       this.namespace = "api";
@@ -75,6 +83,30 @@ export function makeServer() {
             refreshToken: "string",
           },
         };
+      });
+
+      this.get("/users", (schema, request) => {
+        const { page = 1, limit = 10 } = request.queryParams;
+        console.log(request.queryParams);
+
+        const total = schema.all("user").length;
+
+        const pageStart = (Number(page) - 1) * Number(limit);
+        const pageEnd = pageStart + Number(limit);
+        console.log({ pageStart, pageEnd });
+
+        const users = schema
+          .all("user")
+          .models.slice(pageStart, pageEnd)
+          .sort((a, b) => {
+            return a?.id < b?.id;
+          });
+
+        return new Response(
+          200,
+          { "x-total-count": String(total) },
+          { data: users },
+        );
       });
     },
   });

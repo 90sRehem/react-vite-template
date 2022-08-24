@@ -14,6 +14,7 @@ import {
 import { useMutation } from "@/lib/react-query";
 import { storage } from "@/utils";
 import { useToast } from "@chakra-ui/react";
+import { useNavigate } from "react-router-dom";
 
 interface AuthProviderProps {
   children: ReactNode;
@@ -36,34 +37,30 @@ const AuthContext = createContext({} as AuthContextData);
 function getFromStorage(key: string) {
   const localValues = storage.getItem({ key, storageType: "local" });
   const sessionValues = storage.getItem({ key, storageType: "session" });
-  const userSettings = storage.getItem({
-    key: "settings",
-    storageType: "local",
-  });
 
   if (localValues) {
-    return { ...localValues, settings: userSettings };
+    return localValues;
   }
   if (sessionValues) {
-    return { ...sessionValues, settings: userSettings };
+    return sessionValues;
   }
 
   return null;
 }
 function AuthProvider({ children }: AuthProviderProps): JSX.Element {
   const toast = useToast();
-
-  const [user, setUser] = useState<IAuthUser>(() => {
+  const navigate = useNavigate();
+  const [user, setUser] = useState<IAuthUser | null>(() => {
     const storagedUser = getFromStorage("user") as IAuthUser;
 
     if (storagedUser) {
       return storagedUser;
     }
 
-    return {} as IAuthUser;
+    return null;
   });
 
-  const isAuthenticated = !!Object.keys(user).length;
+  const isAuthenticated = user ? !!Object.keys(user).length : false;
 
   const mutation = useMutation(
     async (formData: IAuthCredentials) => {
@@ -95,6 +92,7 @@ function AuthProvider({ children }: AuthProviderProps): JSX.Element {
       try {
         await mutation.mutateAsync(data);
         mutation.reset();
+        navigate("/");
       } catch (error) {
         console.log(error);
       }
@@ -116,7 +114,7 @@ function AuthProvider({ children }: AuthProviderProps): JSX.Element {
       storage.clearItem({ key: "user", storageType: "session" });
     }
 
-    setUser({} as IAuthUser);
+    setUser(null);
   }, []);
 
   const value = useMemo(

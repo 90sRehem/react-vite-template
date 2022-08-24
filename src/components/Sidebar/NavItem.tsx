@@ -27,7 +27,6 @@ export function NavItem({
       alignItems={navSize === "small" ? "center" : "flex-start"}
     >
       <Menu placement="right">
-        {/* <Link to={url} > */}
         <ChakraLink
           as={Link}
           backgroundColor={active ? "#AEC8CA" : ""}
@@ -50,7 +49,6 @@ export function NavItem({
             </Flex>
           </MenuButton>
         </ChakraLink>
-        {/* </Link> */}
         <MenuList py={0} border="none" w={200} h={200} ml={5}>
           <NavHoverBox
             title={title}
