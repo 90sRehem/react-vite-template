@@ -24,8 +24,7 @@ export function Pagination({
   onPageChange,
   registersPerPage = 10,
 }: IPaginationProps) {
-  const lastPage = Math.floor(totalCountOfRegisters / registersPerPage);
-  console.log(lastPage);
+  const lastPage = Math.ceil(totalCountOfRegisters / registersPerPage);
 
   const previousPages =
     currentPage > 1
@@ -50,7 +49,7 @@ export function Pagination({
     >
       <Box>
         <strong>
-          {currentPage * registersPerPage - siblingsCount * 10 + 1}
+          {currentPage * registersPerPage - siblingsCount * 10 - 10 + 1}
         </strong>{" "}
         -{" "}
         <strong>
