@@ -14,7 +14,6 @@ import {
 import { useMutation } from "@/lib/react-query";
 import { storage } from "@/utils";
 import { useToast } from "@chakra-ui/react";
-import { AxiosError } from "axios";
 
 interface AuthProviderProps {
   children: ReactNode;
