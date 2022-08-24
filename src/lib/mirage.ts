@@ -95,13 +95,11 @@ export function makeServer() {
 
       this.get("/users", (schema, request) => {
         const { page = 1, limit = 10 } = request.queryParams;
-        console.log(request.queryParams);
 
         const total = schema.all("user").length;
 
         const pageStart = (Number(page) - 1) * Number(limit);
         const pageEnd = pageStart + Number(limit);
-        console.log({ pageStart, pageEnd });
 
         const users = schema
           .all("user")
