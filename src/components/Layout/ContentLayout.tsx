@@ -8,6 +8,7 @@ import {
   useColorModeValue,
 } from "@/lib/chakra-ui";
 import { ReactNode } from "react";
+import { useNavigate } from "react-router-dom";
 import { useSidebarSizeStore } from "../Sidebar/stores/sidebarSizeStore";
 
 interface ContentLayoutProps {
@@ -22,7 +23,7 @@ export function ContentLayout({
   pageTitle,
 }: ContentLayoutProps) {
   const { navSize } = useSidebarSizeStore();
-
+  const navigate = useNavigate()
   return (
     <Stack
       bg={useColorModeValue("gray.100", "gray.900")}
@@ -42,6 +43,7 @@ export function ContentLayout({
                 aria-label="go back"
                 icon={<ArrowBackIcon />}
                 size="lg"
+                onClick={() => navigate(-1)}
               />
             </Tooltip>
           )}
