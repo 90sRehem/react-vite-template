@@ -5,20 +5,12 @@ import {
   Link as ChakraLink,
   Menu,
   MenuButton,
-  MenuList,
+  Tooltip,
 } from "@chakra-ui/react";
 import { Link } from "../Link";
-import { NavHoverBox } from "./NavHoverBox";
 import { INavItemProps } from "./types";
 
-export function NavItem({
-  icon,
-  title,
-  description,
-  active,
-  navSize,
-  url,
-}: INavItemProps) {
+export function NavItem({ icon, title, active, navSize, url }: INavItemProps) {
   return (
     <Flex
       mt={30}
@@ -36,26 +28,21 @@ export function NavItem({
           w={navSize === "large" ? "100%" : ""}
           to={url}
         >
-          <MenuButton w="100%">
-            <Flex>
-              <Icon
-                as={icon}
-                fontSize="xl"
-                color={active ? "#82AAAD" : "gray.500"}
-              />
-              <Text ml={5} display={navSize === "small" ? "none" : "flex"}>
-                {title}
-              </Text>
-            </Flex>
-          </MenuButton>
+          <Tooltip hasArrow placement="right" label={title}>
+            <MenuButton w="100%">
+              <Flex>
+                <Icon
+                  as={icon}
+                  fontSize="xl"
+                  color={active ? "#82AAAD" : "gray.500"}
+                />
+                <Text ml={5} display={navSize === "small" ? "none" : "flex"}>
+                  {title}
+                </Text>
+              </Flex>
+            </MenuButton>
+          </Tooltip>
         </ChakraLink>
-        <MenuList py={0} border="none" w={200} h={200} ml={5}>
-          <NavHoverBox
-            title={title}
-            icon={icon}
-            description={description || ""}
-          />
-        </MenuList>
       </Menu>
     </Flex>
   );
