@@ -39,6 +39,9 @@ export function Pagination({
       )
       : [];
 
+  const start = currentPage * registersPerPage - (registersPerPage - 1);
+  const end = start + registersPerPage - 1;
+
   return (
     <Stack
       direction={["column", "row"]}
@@ -48,16 +51,10 @@ export function Pagination({
       spacing="6"
     >
       <Box>
-        <strong>
-          {currentPage * registersPerPage - siblingsCount * 10 - 10 + 1}
-        </strong>{" "}
-        -{" "}
-        <strong>
-          {currentPage * registersPerPage > totalCountOfRegisters
-            ? totalCountOfRegisters
-            : currentPage * registersPerPage}
-        </strong>{" "}
-        de <strong>{totalCountOfRegisters}</strong>
+        <Text>
+          <strong>{start}</strong> - <strong>{end}</strong> de{" "}
+          <strong>{totalCountOfRegisters}</strong>
+        </Text>
       </Box>
       <Stack direction="row" spacing="2">
         {currentPage > 1 + siblingsCount && (
