@@ -1,6 +1,18 @@
-import { FiArchive } from "react-icons/fi";
+import {
+  TableContainer,
+  Table as ChakraTable,
+  Tbody,
+  Thead,
+  Th,
+  Tr,
+  Td,
+  Skeleton,
+  useColorModeValue,
+} from "@/lib/chakra-ui";
+import React from "react";
+import { Pagination } from "../Pagination";
 
-type TableColumn<Entry> = {
+export type TableColumn<Entry> = {
   title: string;
   field: keyof Entry;
   Cell?({ entry }: { entry: Entry }): React.ReactElement;
@@ -9,62 +21,83 @@ type TableColumn<Entry> = {
 export type TableProps<Entry> = {
   data: Entry[];
   columns: TableColumn<Entry>[];
+  loadingData: boolean;
+  totalCountOfRegisters: number;
+  registersPerPage: number;
+  currentPage: number;
+  onPageChange: (page: number) => void;
 };
 
-export const Table = <Entry extends { id: string }>({
-  data,
+export function Table<Entry extends { id: string }>({
   columns,
-}: TableProps<Entry>) => {
-  if (!data?.length) {
-    return (
-      <div className="bg-white text-gray-500 h-80 flex justify-center items-center flex-col">
-        <FiArchive className="h-16 w-16" />
-        <h4>No Entries Found</h4>
-      </div>
-    );
-  }
+  data = [],
+  loadingData = false,
+  totalCountOfRegisters,
+  registersPerPage,
+  currentPage,
+  onPageChange,
+}: TableProps<Entry>) {
   return (
-    <div className="flex flex-col">
-      <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-        <div className="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
-          <div className="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
-                <tr>
-                  {columns.map((column, index) => (
-                    <th
-                      key={column.title + index}
-                      scope="col"
-                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                    >
-                      {column.title}
-                    </th>
+    <>
+      <TableContainer
+        maxH="container.md"
+        overflowY="auto"
+        overflowX="hidden"
+        bg={useColorModeValue("gray.200", "gray.800")}
+      >
+        <ChakraTable>
+          <Thead>
+            <Tr>
+              {columns.map((collumn, index) => {
+                return (
+                  <Th key={`${collumn.title + index}`} textAlign="center">
+                    {collumn.title}
+                  </Th>
+                );
+              })}
+            </Tr>
+          </Thead>
+          <Tbody>
+            {loadingData && (
+              <Tr>
+                <Td colSpan={columns.length}>
+                  <Skeleton height="4" />
+                </Td>
+              </Tr>
+            )}
+            {data ? (
+              data.map((entry, entryIndex) => (
+                // eslint-disable-next-line react/no-array-index-key
+                <Tr key={entryIndex}>
+                  {columns.map(({ Cell, field, title }, columnIndex) => (
+                    <Td key={`${title + columnIndex}`} textAlign="center">
+                      {Cell ? (
+                        <Cell entry={entry} />
+                      ) : (
+                        (entry[field] as React.ReactElement)
+                      )}
+                    </Td>
                   ))}
-                </tr>
-              </thead>
-              <tbody>
-                {data.map((entry, entryIndex) => (
-                  <tr
-                    key={entry?.id || entryIndex}
-                    className={
-                      entryIndex % 2 === 0 ? "bg-white" : "bg-gray-100"
-                    }
-                  >
-                    {columns.map(({ Cell, field, title }, columnIndex) => (
-                      <td
-                        key={title + columnIndex}
-                        className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900"
-                      >
-                        {Cell ? <Cell entry={entry} /> : entry[field]}
-                      </td>
-                    ))}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-    </div>
+                </Tr>
+              ))
+            ) : (
+              <Tr>
+                <Td textAlign="center" colSpan={5}>
+                  vazio
+                </Td>
+              </Tr>
+            )}
+          </Tbody>
+        </ChakraTable>
+      </TableContainer>
+      {data && (
+        <Pagination
+          totalCountOfRegisters={totalCountOfRegisters}
+          registersPerPage={registersPerPage}
+          currentPage={currentPage}
+          onPageChange={onPageChange}
+        />
+      )}
+    </>
   );
-};
+}

@@ -6,3 +6,4 @@ export * from "./Link";
 export * from "./SidebarWiithHeader";
 export * from "./Layout";
 export * from "./Pagination";
+export * from "./Table";
