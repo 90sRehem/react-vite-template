@@ -1,4 +1,4 @@
-export * from "./NotFound";
+export * from "./PageNotFound";
 export * from "./Landing";
 export * from "./Home";
 export * from "./Clients";

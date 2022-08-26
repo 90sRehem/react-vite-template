@@ -1,10 +1,14 @@
-import { SidebarWithHeader, Fallback } from "@/components";
+import { SidebarWithHeader, Loader } from "@/components";
 import { useAuth } from "@/features/authentication";
 import { lazyImport } from "@/utils";
 import { Suspense } from "react";
 import { Navigate, Outlet, RouteObject } from "react-router-dom";
 
 const { Dashboard } = lazyImport(() => import("@/features/misc"), "Dashboard");
+const { PageNotFound } = lazyImport(
+  () => import("@/features/misc"),
+  "PageNotFound",
+);
 const { Home } = lazyImport(() => import("@/features/misc"), "Home");
 const { Reports } = lazyImport(() => import("@/features/misc"), "Reports");
 const { Settings } = lazyImport(() => import("@/features/misc"), "Settings");
@@ -18,7 +22,7 @@ function PrivateOulet() {
 
   if (isAuthenticated) {
     return (
-      <Suspense fallback={<Fallback />}>
+      <Suspense fallback={<Loader />}>
         <SidebarWithHeader />
         <Outlet />
       </Suspense>
@@ -37,7 +41,7 @@ export const protectedRoutes: RouteObject[] = [
       { path: "users/*", element: <UsersRoutes /> },
       { path: "reports/*", element: <Reports /> },
       { path: "settings/*", element: <Settings /> },
-      { path: "*", element: <Navigate to="/" /> },
+      { path: "*", element: <PageNotFound /> },
     ],
   },
 ];
