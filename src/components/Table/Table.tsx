@@ -50,7 +50,7 @@ export function Table<Entry extends { id: string }>({
             <Tr>
               {columns.map((collumn, index) => {
                 return (
-                  <Th key={`${collumn.title + index}`} textAlign="center">
+                  <Th key={collumn.title} textAlign="center">
                     {collumn.title}
                   </Th>
                 );
@@ -70,7 +70,7 @@ export function Table<Entry extends { id: string }>({
                 // eslint-disable-next-line react/no-array-index-key
                 <Tr key={entryIndex}>
                   {columns.map(({ Cell, field, title }, columnIndex) => (
-                    <Td key={`${title + columnIndex}`} textAlign="center">
+                    <Td key={title} textAlign="center">
                       {Cell ? (
                         <Cell entry={entry} />
                       ) : (
