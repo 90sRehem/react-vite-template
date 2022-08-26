@@ -5,13 +5,12 @@ import {
   IconButton,
   Icon,
   Box,
-  Heading,
-  Button,
   useColorModeValue,
 } from "@/lib/chakra-ui";
 import { ErrorBoundary } from "react-error-boundary";
 import { RiPencilLine, RiDeleteBin5Line } from "@/lib/react-icons";
-import { Table } from "@/components";
+import { ReactTable } from "@/components";
+import { Fallback } from "@/components/Fallback";
 
 interface IUsersTableProps {
   data: IUser[];
@@ -24,12 +23,12 @@ interface IUsersTableProps {
 
 function ErrorFallback() {
   return (
-    <div role="alert">
-      <Heading>Ooops, something went wrong :( </Heading>
-      <Button onClick={() => window.location.assign(window.location.origin)}>
-        Refresh
-      </Button>
-    </div>
+    <Fallback
+      fallbackBtn
+      type="error"
+      headingText="Ops, aconteceu algo de errado."
+      descriptionText="Ocorreu um problema ao tentar renderizar a tabela."
+    />
   );
 }
 
@@ -48,23 +47,26 @@ export function UsersTable({
       p="2"
       bg={useColorModeValue("gray.200", "gray.800")}
     >
-      <ErrorBoundary FallbackComponent={ErrorFallback}>
-        <Table<IUser>
+      <ErrorBoundary
+        FallbackComponent={ErrorFallback}
+        onError={(error, info) => console.log({ error, info })}
+      >
+        <ReactTable<IUser>
           columns={[
-            { title: "id", field: "id" },
-            { title: "name", field: "name" },
-            { title: "email", field: "email" },
-            { title: "createdAt", field: "createdAt" },
+            { id: "1", accessor: "id", Header: "id" },
+            { id: "2", accessor: "name", Header: "nome" },
+            { id: "3", accessor: "email", Header: "email" },
+            { id: "4", accessor: "createdAt", Header: "data de criação" },
             {
-              title: "ações",
-              field: "id",
+              id: "5",
+              accessor: "id",
+              Header: "ações",
               // eslint-disable-next-line react/no-unstable-nested-components
-              Cell({ entry: { id } }) {
+              Cell({ value }) {
                 return (
-                  <Flex alignItems="center" justifyContent="center">
+                  <Flex justifyContent="space-around">
                     <Tooltip hasArrow label="Editar" aria-label="Edit button">
                       <IconButton
-                        mr="2"
                         as="a"
                         size="sm"
                         fontSize="small"
@@ -72,6 +74,8 @@ export function UsersTable({
                         icon={<Icon as={RiPencilLine} fontSize="16" />}
                         aria-label="Edit button"
                         onClick={() => {
+                          console.log(value);
+
                           /* TODO */
                         }}
                       >

@@ -1,4 +1,4 @@
-export * from "./Fallback";
+export * from "./Loader";
 export * from "./ColorModeButton";
 export * from "./Copyright";
 export * from "./Form";
@@ -7,3 +7,4 @@ export * from "./SidebarWiithHeader";
 export * from "./Layout";
 export * from "./Pagination";
 export * from "./Table";
+export * from "./Fallback";

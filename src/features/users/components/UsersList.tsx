@@ -1,6 +1,6 @@
 import { Flex, Heading, Spinner, Box } from "@/lib/chakra-ui";
-import { useState } from "react";
 import { IUser } from "@/types";
+import { useState } from "react";
 import { useUsers } from "../api";
 import { UsersTable } from "./UsersTable";
 
@@ -25,7 +25,7 @@ export function UsersList() {
             </Heading>
           </Flex>
           <UsersTable
-            data={data?.users as IUser[]}
+            data={data?.users || []}
             currentPage={page}
             loadingData={isLoading}
             onPageChange={setPage}
