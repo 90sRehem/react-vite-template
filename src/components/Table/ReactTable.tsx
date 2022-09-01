@@ -49,6 +49,12 @@ export function ReactTable<Entry extends object>({
           <Thead textAlign="center">
             {headerGroups.map(headerGroup => (
               <Tr {...headerGroup.getHeaderGroupProps()}>
+                {/* <Th px="6" w="8">
+                  <Box as="label" border="2px solid" borderRadius="sm">
+                    {" "}
+                    <Checkbox />
+                  </Box>
+                </Th> */}
                 {headerGroup.headers.map(column => (
                   <Th
                     textAlign="center"
@@ -70,13 +76,14 @@ export function ReactTable<Entry extends object>({
             ))}
           </Thead>
           <Tbody {...getTableBodyProps()}>
-            {loadingData ? (
+            {loadingData && (
               <Tr>
                 <Td colSpan={columns.length}>
                   <Skeleton height="4" />
                 </Td>
               </Tr>
-            ) : (
+            )}
+            {rows.length > 0 ? (
               rows.map(row => {
                 prepareRow(row);
                 return (
@@ -89,6 +96,12 @@ export function ReactTable<Entry extends object>({
                   </Tr>
                 );
               })
+            ) : (
+              <Tr>
+                <Td textAlign="center" colSpan={6}>
+                  vazio
+                </Td>
+              </Tr>
             )}
           </Tbody>
         </ChakraTable>
