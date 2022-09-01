@@ -16,19 +16,22 @@ const schema = z.object({
     .string()
     .min(1, "É necessário informar o e-mail!")
     .email("Informe um e-mail válido!"),
-  password: z.string().min(1, "É necessário informar a senha!"),
+  password: z
+    .string()
+    .min(1, "A senha é obrigatória!")
+    .min(6, "A senha deve ter no mínimo 6 caracteres!"),
   rememberMe: z.boolean().optional(),
 });
 
 type LoginFormProps = {
-  title: string;
+  onSuccess: () => void;
 };
 
-export function LoginForm({ title }: LoginFormProps) {
+export function LoginForm({ onSuccess }: LoginFormProps) {
   const { login } = useAuth();
 
   async function handleSubmit(formData: IAuthCredentials) {
-    await login(formData);
+    await login(formData, () => onSuccess());
   }
 
   return (
@@ -43,7 +46,7 @@ export function LoginForm({ title }: LoginFormProps) {
       justifyContent="center"
     >
       <Stack spacing="8" w="full" maxW="lg">
-        <Heading fontSize="2xl">{title}</Heading>
+        <Heading fontSize="2xl">Entre com sua conta.</Heading>
         <Form<IAuthCredentials, typeof schema>
           onSubmit={async values => handleSubmit(values)}
           schema={schema}

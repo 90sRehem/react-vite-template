@@ -9,7 +9,7 @@ export async function authenticate({
 }: Credentials): Promise<IAuthUser | null> {
   const config: AxiosRequestConfig<Credentials> = {
     method: "POST",
-    url: "auth/login",
+    url: "v1/session/login",
     data: { email, password },
   };
   const response = await axios(config);

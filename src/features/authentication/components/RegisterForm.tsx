@@ -28,8 +28,6 @@ export function RegisterForm() {
   const navigate = useNavigate();
 
   async function handleSubmit(formData: IRegisterValues) {
-    console.log(formData);
-
     navigate("/auth/login");
   }
 

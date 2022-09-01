@@ -21,7 +21,10 @@ interface AuthProviderProps {
 
 interface AuthContextData {
   user: IAuthUser | null;
-  login: (credentials: IAuthCredentials) => Promise<void>;
+  login: (
+    credentials: IAuthCredentials,
+    onSuccess: () => void,
+  ) => Promise<void>;
   logout: () => void;
   isAuthenticated: boolean;
   loading: boolean;
@@ -63,9 +66,24 @@ function AuthProvider({ children }: AuthProviderProps): JSX.Element {
     },
     {
       onError(error) {
+        // console.log(error);
+        // const errorMessages: { property: string; message: string }[] = [];
+        // error?.response?.data?.data?.map(item => errorMessages.push(item));
+        // if (errorMessages.length > 0) {
+        //   errorMessages.forEach(element => {
+        //     toast({
+        //       title: "Erro.",
+        //       description: element.message,
+        //       status: "error",
+        //       duration: 6000,
+        //       isClosable: true,
+        //       position: "top-right",
+        //     });
+        //   });
+        // }
         toast({
           title: "Erro.",
-          description: error.response.data.message,
+          description: error?.response?.data?.message || error?.message,
           status: "error",
           duration: 9000,
           isClosable: true,
@@ -89,12 +107,12 @@ function AuthProvider({ children }: AuthProviderProps): JSX.Element {
   );
 
   const login = useCallback(
-    async (data: IAuthCredentials) => {
+    async (data: IAuthCredentials, onSuccess: () => void) => {
       try {
-        await mutation.mutateAsync(data);
+        await mutation.mutateAsync(data, { onSuccess: () => onSuccess() });
         mutation.reset();
       } catch (error) {
-        console.log(error);
+        // console.log(error);
       }
     },
     [mutation],
