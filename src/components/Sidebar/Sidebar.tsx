@@ -27,10 +27,10 @@ export function Sidebar() {
 
   const navLinks: INavItemProps[] = useMemo(
     () => [
-      { url: "/dashboard", icon: FiCalendar, title: "Painel", navSize },
-      { url: "/users", icon: FiUser, title: "Usuários", navSize },
-      { url: "/reports", icon: FiBriefcase, title: "Relatórios", navSize },
-      { url: "/settings", icon: FiSettings, title: "Ajustes", navSize },
+      { url: "/app", icon: FiCalendar, title: "Painel", navSize },
+      { url: "/app/users", icon: FiUser, title: "Usuários", navSize },
+      { url: "/app/reports", icon: FiBriefcase, title: "Relatórios", navSize },
+      { url: "/app/settings", icon: FiSettings, title: "Ajustes", navSize },
     ],
     [navSize],
   );

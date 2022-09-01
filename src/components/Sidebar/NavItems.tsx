@@ -6,7 +6,7 @@ import { INavItems } from "./types";
 export function NavItems({ items }: INavItems) {
   const path = useLocation();
   return (
-    <>
+    <ul>
       {items.map(item => (
         <Fragment key={item.title}>
           <NavItem
@@ -14,11 +14,11 @@ export function NavItems({ items }: INavItems) {
             icon={item.icon}
             title={item.title}
             description={item.description}
-            active={path.pathname.startsWith(item.url)}
+            active={path.pathname.endsWith(item.url)}
             url={item.url}
           />
         </Fragment>
       ))}
-    </>
+    </ul>
   );
 }

@@ -1,4 +1,4 @@
-import { Fallback } from "@/components";
+import { Loader } from "@/components";
 import { lazyImport } from "@/utils";
 import { Suspense } from "react";
 import { Navigate, Outlet, RouteObject } from "react-router-dom";
@@ -11,7 +11,7 @@ const { AuthRoutes } = lazyImport(
 
 function RoutesContainer() {
   return (
-    <Suspense fallback={<Fallback />}>
+    <Suspense fallback={<Loader />}>
       <Outlet />
     </Suspense>
   );
