@@ -24,7 +24,7 @@ export function Header() {
 
   return (
     <Flex
-      as="aside"
+      as="header"
       pos="fixed"
       zIndex={9999}
       w="full"

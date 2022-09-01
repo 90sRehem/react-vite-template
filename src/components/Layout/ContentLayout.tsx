@@ -23,7 +23,7 @@ export function ContentLayout({
   pageTitle,
 }: ContentLayoutProps) {
   const { navSize } = useSidebarSizeStore();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   return (
     <Stack
       bg={useColorModeValue("gray.100", "gray.900")}
@@ -33,23 +33,26 @@ export function ContentLayout({
       w="full"
       minH="100vh"
       minW="100vw"
+      as="main"
     >
       <>
-        <Flex p="2">
-          {goBackButton && (
-            <Tooltip hasArrow>
-              <IconButton
-                variant="outline"
-                aria-label="go back"
-                icon={<ArrowBackIcon />}
-                size="lg"
-                onClick={() => navigate(-1)}
-              />
-            </Tooltip>
-          )}
-          {pageTitle && <Heading ml="2">{pageTitle}</Heading>}
-        </Flex>
-        {children}
+        {goBackButton || pageTitle ? (
+          <Flex p="2">
+            {goBackButton ? (
+              <Tooltip hasArrow>
+                <IconButton
+                  variant="outline"
+                  aria-label="go back"
+                  icon={<ArrowBackIcon />}
+                  size="lg"
+                  onClick={() => navigate(-1)}
+                />
+              </Tooltip>
+            ) : null}
+            {pageTitle ? <Heading ml="2">{pageTitle}</Heading> : null}
+          </Flex>
+        ) : null}
+        <section>{children}</section>
       </>
     </Stack>
   );

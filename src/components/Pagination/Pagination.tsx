@@ -49,6 +49,7 @@ export function Pagination({
       justify="space-between"
       align="center"
       spacing="6"
+      as="section"
     >
       <Box>
         <Text>
