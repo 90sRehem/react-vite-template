@@ -1,7 +1,7 @@
 import { BrowserRouter } from "react-router-dom";
 import { ChakraProvider } from "@/lib/chakra-ui";
 import { makeServer } from "@/lib/mirage";
-import { DEV_ENV } from "@/config";
+import { DEV_ENV, FAKE_SERVER } from "@/config";
 import { QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
 import { queryClient } from "@/lib/react-query";
@@ -22,7 +22,7 @@ function ErrorFallback() {
 }
 
 export function App() {
-  if (DEV_ENV) {
+  if (DEV_ENV && FAKE_SERVER) {
     makeServer();
   }
   return (
