@@ -12,26 +12,32 @@ async function getUsers(
   limit: number,
   page: number,
 ): Promise<IGetUsersResponse> {
-  const response = await axios.get<any, AxiosResponse<IAPIResponse<IUser[]>>>(
-    "/users",
-    {
-      params: { page, limit },
-    },
-  );
-  const totalCount = Number(response.headers["x-total-count"]);
+  let result: IGetUsersResponse = { users: [], totalCount: 0 };
+  try {
+    const response = await axios.get<any, AxiosResponse<IAPIResponse<IUser[]>>>(
+      "/v1/users",
+      {
+        params: { page, limit },
+      },
+    );
+    const totalCount = Number(response.headers["x-total-count"]);
 
-  const users = response.data.data.map(user => ({
-    id: user.id,
-    name: user.name,
-    email: user.email,
-    createdAt: new Date(user.createdAt).toLocaleDateString("pt-BR", {
-      day: "2-digit",
-      month: "long",
-      year: "numeric",
-    }),
-  }));
-
-  return { users, totalCount };
+    const users = response.data.data.map(user => ({
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      createdAt: new Date(user.createdAt).toLocaleDateString("pt-BR", {
+        day: "2-digit",
+        month: "long",
+        year: "numeric",
+      }),
+    }));
+    result = { users, totalCount };
+    return result;
+  } catch (error) {
+    // console.log(error);
+    return result;
+  }
 }
 
 interface IUseUsersProps {
