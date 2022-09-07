@@ -41,16 +41,8 @@ export function UsersTable({
   totalCountOfRegisters,
 }: IUsersTableProps) {
   return (
-    <Box
-      rounded="md"
-      boxShadow="md"
-      p="2"
-      bg={useColorModeValue("gray.200", "gray.800")}
-    >
-      <ErrorBoundary
-        FallbackComponent={ErrorFallback}
-        onError={(error, info) => console.log({ error, info })}
-      >
+    <Box p="2" bg={useColorModeValue("gray.200", "gray.800")}>
+      <ErrorBoundary FallbackComponent={ErrorFallback}>
         <ReactTable<IUser>
           columns={[
             { id: "1", accessor: "id", Header: "id" },
@@ -74,8 +66,6 @@ export function UsersTable({
                         icon={<Icon as={RiPencilLine} fontSize="16" />}
                         aria-label="Edit button"
                         onClick={() => {
-                          console.log(value);
-
                           /* TODO */
                         }}
                       >
