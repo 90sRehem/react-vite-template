@@ -33,15 +33,16 @@ function PrivateOulet() {
 
 export const protectedRoutes: RouteObject[] = [
   {
-    path: "/app",
+    path: "/",
     element: <PrivateOulet />,
     children: [
       { index: true, path: "/app", element: <Dashboard /> },
       // { path: "dashboard", element: <Dashboard /> },
       { path: "/app/users/*", element: <UsersRoutes /> },
-      { path: "reports/*", element: <Reports /> },
-      { path: "settings/*", element: <Settings /> },
-      { path: "*", element: <PageNotFound /> },
+      { path: "/app/reports/*", element: <Reports /> },
+      { path: "/app/settings/*", element: <Settings /> },
+      { path: "/app/*", element: <PageNotFound /> },
+      { path: "/", element: <Navigate to="/app" /> },
     ],
   },
 ];
