@@ -1,5 +1,4 @@
-// eslint-disable-next-line import/no-extraneous-dependencies
-import { IAuthResponse } from "@/features/authentication";
+/* eslint-disable import/no-extraneous-dependencies */
 import {
   ActiveModelSerializer,
   createServer,
@@ -55,7 +54,7 @@ export function makeServer() {
       this.namespace = "api";
       this.timing = 750;
 
-      this.post("/auth/login", (schema, request) => {
+      this.post("v1/session/login", (schema, request) => {
         const attrs = JSON.parse(request.requestBody);
         const user = schema.findBy("user", { email: attrs.email });
         if (user?.email === attrs.email) {
@@ -93,7 +92,7 @@ export function makeServer() {
         };
       });
 
-      this.get("/users", (schema, request) => {
+      this.get("v1/users", (schema, request) => {
         const { page = 1, limit = 10 } = request.queryParams;
 
         const total = schema.all("user").length;
