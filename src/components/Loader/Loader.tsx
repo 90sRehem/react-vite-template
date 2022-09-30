@@ -1,18 +1,10 @@
-import { Spinner } from "@chakra-ui/react";
+import { Flex, Spinner, Text } from "@chakra-ui/react";
 
 export function Loader() {
   return (
-    <div
-      style={{
-        width: "100%",
-        height: "100vh",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-      }}
-    >
+    <Flex w="full" h="100vh" alignItems="center" justify="center">
       <Spinner size="xl" />
-      <p>Carregando...</p>
-    </div>
+      <Text>Carregando...</Text>
+    </Flex>
   );
 }
