@@ -1,4 +1,5 @@
-import { Text } from "@chakra-ui/react";
+import { Typography } from "@mui/material";
+import { Link } from "../Link";
 
 type CopyrightProps = {
   title: string;
@@ -6,12 +7,12 @@ type CopyrightProps = {
 
 export function Copyright({ title }: CopyrightProps) {
   return (
-    <Text fontSize="sm" align="center">
+    <Typography fontSize="sm" align="center">
       {"Copyright © "}
-      {/* <Link color="inherit" to="https://mui.com/"> */}
-      {title}
-      {/* </Link>{' '} */}
+      <Link color="inherit" to="https://mui.com/">
+        {title}
+      </Link>{" "}
       {new Date().getFullYear()}.
-    </Text>
+    </Typography>
   );
 }
