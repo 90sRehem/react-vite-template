@@ -9,6 +9,8 @@ import {
   Icon,
   IconProps,
 } from "@chakra-ui/react";
+import { DisplayValue } from "../components/DisplayValue";
+import { IncrementValue } from "../components/IncrementValue";
 
 function Illustration(props: IconProps) {
   return (
@@ -834,6 +836,19 @@ function Illustration(props: IconProps) {
 export function Landing() {
   return (
     <Container maxW="5xl">
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "1fr 1fr",
+          maxWidth: 600,
+          gap: "1rem",
+        }}
+      >
+        <IncrementValue item="value1" />
+        <DisplayValue item="value1" />
+        <IncrementValue item="value2" />
+        <DisplayValue item="value2" />
+      </div>
       <Stack
         textAlign="center"
         align="center"

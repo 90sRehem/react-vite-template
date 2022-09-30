@@ -44,7 +44,7 @@ function authRequestInterceptor(config: AxiosRequestConfig) {
 }
 
 export const axios = Axios.create({
-  baseURL: API_URL || "http://localhost:3333/api",
+  baseURL: API_URL || "http://localhost:3000/api",
 });
 
 axios.interceptors.request.use(authRequestInterceptor, error => {

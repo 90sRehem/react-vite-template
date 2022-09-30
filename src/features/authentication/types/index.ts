@@ -31,11 +31,11 @@ export interface IAuthUser extends IUser {
 
 export interface IAuthState {
   status: "idle" | "loading" | "error";
-  getAuthUser(): IAuthUser | null;
   authUser: IAuthUser | null;
-  setAuthUser(data: IAuthUser | null): void;
-  isAuthenticated(): boolean;
-  login: (credentials: IAuthCredentials) => Promise<void>;
+  login: (
+    credentials: IAuthCredentials,
+    onSuccess: () => void,
+  ) => Promise<void>;
   logout: () => void;
 }
 

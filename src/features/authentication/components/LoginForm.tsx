@@ -10,6 +10,7 @@ import {
 } from "@/lib/chakra-ui";
 import { useAuth } from "@/features/authentication";
 import { IAuthCredentials } from "../types";
+import { useAuthStore } from "../stores/authStore";
 
 const schema = z.object({
   email: z
@@ -28,10 +29,12 @@ type LoginFormProps = {
 };
 
 export function LoginForm({ onSuccess }: LoginFormProps) {
-  const { login } = useAuth();
+  // const { login } = useAuth();
+  const login = useAuthStore(state => state.login);
 
   async function handleSubmit(formData: IAuthCredentials) {
-    await login(formData, () => onSuccess());
+    // await login(formData, () => onSuccess());
+    await login(formData, onSuccess);
   }
 
   return (

@@ -52,10 +52,11 @@ export function makeServer() {
       schema.createList("user", 100);
     },
     routes() {
+      this.urlPrefix = "http://localhost:3000/";
       this.namespace = "api";
       this.timing = 750;
 
-      this.post("/auth/login", (schema, request) => {
+      this.post("/v1/session/login", (schema, request) => {
         const attrs = JSON.parse(request.requestBody);
         const user = schema.findBy("user", { email: attrs.email });
         if (user?.email === attrs.email) {
@@ -82,7 +83,7 @@ export function makeServer() {
         );
       });
 
-      this.post("auth/register", (schema, request) => {
+      this.post("v1/users/register", (schema, request) => {
         const attrs = JSON.parse(request.requestBody);
         return {
           data: {
