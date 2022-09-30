@@ -1,4 +1,4 @@
-import { Spinner } from "@chakra-ui/react";
+import CircularProgress from "@mui/material/CircularProgress";
 
 export function Loader() {
   return (
@@ -11,7 +11,7 @@ export function Loader() {
         justifyContent: "center",
       }}
     >
-      <Spinner size="xl" />
+      <CircularProgress sx={{ marginRight: "0.5rem" }} />
       <p>Carregando...</p>
     </div>
   );
