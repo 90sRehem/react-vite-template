@@ -1,4 +1,10 @@
-import { CheckboxInput, Form, TextInput, Link } from "@/components";
+import {
+  CheckboxInput,
+  Form,
+  TextInput,
+  Link,
+  PasswordInput,
+} from "@/components";
 import { z } from "@/lib/zod";
 import {
   Stack,
@@ -7,6 +13,7 @@ import {
   Text,
   useColorModeValue,
   Flex,
+  useMediaQuery,
 } from "@/lib/chakra-ui";
 import { useAuth } from "@/features/authentication";
 import { IAuthCredentials } from "../types";
@@ -29,6 +36,8 @@ type LoginFormProps = {
 
 export function LoginForm({ onSuccess }: LoginFormProps) {
   const { login } = useAuth();
+  const [isLargerThan1280] = useMediaQuery("(min-width: 768px)");
+  const bg = useColorModeValue("white", "gray.700");
 
   async function handleSubmit(formData: IAuthCredentials) {
     await login(formData, () => onSuccess());
@@ -37,8 +46,8 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
   return (
     <Flex
       rounded="lg"
-      bg={useColorModeValue("white", "gray.700")}
-      boxShadow="lg"
+      bg={isLargerThan1280 ? bg : ""}
+      boxShadow={isLargerThan1280 ? "lg" : ""}
       p="0"
       w="xl"
       h="xl"
@@ -59,7 +68,7 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
                 error={formState.errors.email}
                 registration={register("email")}
               />
-              <TextInput
+              <PasswordInput
                 name="password"
                 label="Senha"
                 error={formState.errors.password}
