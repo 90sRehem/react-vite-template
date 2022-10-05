@@ -8,7 +8,11 @@ import manifest from "./manifest.json";
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  test: {},
+  test: {
+    globals: true,
+    environment: "jsdom",
+    setupFiles: ["./setupTests.ts"],
+  },
   // define: { "process.env": {} },
   resolve: {
     alias: {
