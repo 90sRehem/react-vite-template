@@ -51,7 +51,7 @@ export function Fallback({
   fallbackBtn = false,
 }: IFallBackCardProps) {
   return (
-    <Flex alignItems="center" justifyContent="center">
+    <Flex alignItems="center" justifyContent="center" minW="100vh" minH="100vh">
       <Box
         textAlign="center"
         py={10}
@@ -67,9 +67,11 @@ export function Fallback({
         <Text color="gray.500">{descriptionText}</Text>
         {fallbackBtn && (
           <Button
+            mt="4"
+            colorScheme="twitter"
             onClick={() => window.location.assign(window.location.origin)}
           >
-            Refresh
+            Voltar para o início.
           </Button>
         )}
       </Box>

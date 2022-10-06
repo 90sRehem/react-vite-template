@@ -4,6 +4,7 @@ import {
   TextInput,
   Link,
   PasswordInput,
+  Backdrop,
 } from "@/components";
 import { z } from "@/lib/zod";
 import {
@@ -14,8 +15,14 @@ import {
   useColorModeValue,
   Flex,
   useMediaQuery,
+  DrawerOverlay,
+  Modal,
+  ModalOverlay,
+  Spinner,
+  ModalContent,
 } from "@/lib/chakra-ui";
-import { useAuth } from "@/features/authentication";
+// import { useAuth } from "@/features/authentication";
+import { useAuthStore } from "../stores/authStore";
 import { IAuthCredentials } from "../types";
 
 const schema = z.object({
@@ -35,7 +42,8 @@ type LoginFormProps = {
 };
 
 export function LoginForm({ onSuccess }: LoginFormProps) {
-  const { login } = useAuth();
+  const login = useAuthStore(state => state.login);
+  const isLoading = useAuthStore(state => state.isLoading);
   const [isLargerThan1280] = useMediaQuery("(min-width: 768px)");
   const bg = useColorModeValue("white", "gray.700");
 
@@ -44,67 +52,70 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
   }
 
   return (
-    <Flex
-      rounded="lg"
-      bg={isLargerThan1280 ? bg : ""}
-      boxShadow={isLargerThan1280 ? "lg" : ""}
-      p="0"
-      w="xl"
-      h="xl"
-      alignItems="center"
-      justifyContent="center"
-    >
-      <Stack spacing="8" w="full" maxW="lg">
-        <Heading fontSize="2xl">Entre com sua conta.</Heading>
-        <Form<IAuthCredentials, typeof schema>
-          onSubmit={async values => handleSubmit(values)}
-          schema={schema}
-        >
-          {({ register, formState }) => (
-            <Stack>
-              <TextInput
-                name="email"
-                label="E-mail"
-                error={formState.errors.email}
-                registration={register("email")}
-              />
-              <PasswordInput
-                name="password"
-                label="Senha"
-                error={formState.errors.password}
-                registration={register("password")}
-              />
-              <Stack spacing={6}>
-                <Stack
-                  direction={{ base: "column", sm: "row" }}
-                  align="start"
-                  justify="space-between"
-                >
-                  <CheckboxInput
-                    label="Lembrar de mim"
-                    registration={register("rememberMe")}
-                  />
+    <>
+      <Backdrop isOpen={isLoading} />
+      <Flex
+        rounded="lg"
+        bg={isLargerThan1280 ? bg : ""}
+        boxShadow={isLargerThan1280 ? "lg" : ""}
+        p="0"
+        w="xl"
+        h="xl"
+        alignItems="center"
+        justifyContent="center"
+      >
+        <Stack spacing="8" w="full" maxW="lg">
+          <Heading fontSize="2xl">Entre com sua conta.</Heading>
+          <Form<IAuthCredentials, typeof schema>
+            onSubmit={async values => handleSubmit(values)}
+            schema={schema}
+          >
+            {({ register, formState }) => (
+              <Stack>
+                <TextInput
+                  name="email"
+                  label="E-mail"
+                  error={formState.errors.email}
+                  registration={register("email")}
+                />
+                <PasswordInput
+                  name="password"
+                  label="Senha"
+                  error={formState.errors.password}
+                  registration={register("password")}
+                />
+                <Stack spacing={6}>
+                  <Stack
+                    direction={{ base: "column", sm: "row" }}
+                    align="start"
+                    justify="space-between"
+                  >
+                    <CheckboxInput
+                      label="Lembrar de mim"
+                      registration={register("rememberMe")}
+                    />
 
-                  <Link to="/forget" color="blue.500">
-                    Esqueceu a senha?
-                  </Link>
-                </Stack>
-                <Button colorScheme="blue" variant="solid" type="submit">
-                  Entrar
-                </Button>
-                <Stack pt={6}>
-                  <Text align="center">
-                    Não possui uma conta?{" "}
-                    <Link to="/auth/register" color="blue.400">
-                      Registrar
+                    <Link to="/forget" color="blue.500">
+                      Esqueceu a senha?
                     </Link>
-                  </Text>
+                  </Stack>
+                  <Button colorScheme="blue" variant="solid" type="submit">
+                    Entrar
+                  </Button>
+                  <Stack pt={6}>
+                    <Text align="center">
+                      Não possui uma conta?{" "}
+                      <Link to="/auth/register" color="blue.400">
+                        Registrar
+                      </Link>
+                    </Text>
+                  </Stack>
                 </Stack>
               </Stack>
-            </Stack>
-          )}
-        </Form>
-      </Stack>
-    </Flex>
+            )}
+          </Form>
+        </Stack>
+      </Flex>
+    </>
   );
 }

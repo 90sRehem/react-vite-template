@@ -40,9 +40,10 @@ export function ReactTable<Entry extends object>({
   return (
     <>
       <TableContainer
-        maxH="container.md"
+        maxH="container.xl"
+        maxW="container.xl"
         overflowY="auto"
-        overflowX="hidden"
+        overflowX="auto"
         bg={useColorModeValue("gray.200", "gray.800")}
       >
         <ChakraTable {...getTableProps()}>

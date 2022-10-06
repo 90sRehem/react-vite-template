@@ -1,5 +1,5 @@
 import { BrowserRouter } from "react-router-dom";
-import { ChakraProvider } from "@/lib/chakra-ui";
+import { ChakraProvider, Flex, theme } from "@/lib/chakra-ui";
 import { makeServer } from "@/lib/mirage";
 import { DEV_ENV, FAKE_SERVER } from "@/config";
 import { QueryClientProvider } from "react-query";
@@ -9,11 +9,12 @@ import { Suspense } from "react";
 import { ErrorBoundary } from "@/lib/react-error-boundary";
 import { AuthProvider } from "./features/authentication";
 import { AppRoutes } from "./routes";
-import { Fallback, Loader } from "./components";
+import { Fallback, Backdrop } from "./components";
 
 function ErrorFallback() {
   return (
     <Fallback
+      fallbackBtn
       type="error"
       headingText="Ops, parece que tivemos um problema."
       descriptionText="Por favor recarregue a página"
@@ -26,9 +27,9 @@ export function App() {
     makeServer();
   }
   return (
-    <Suspense fallback={<Loader />}>
-      <ErrorBoundary FallbackComponent={ErrorFallback}>
-        <ChakraProvider>
+    <Suspense fallback={<Backdrop isOpen />}>
+      <ChakraProvider>
+        <ErrorBoundary FallbackComponent={ErrorFallback}>
           <QueryClientProvider client={queryClient}>
             {DEV_ENV && <ReactQueryDevtools position="bottom-right" />}
             <BrowserRouter>
@@ -37,8 +38,8 @@ export function App() {
               </AuthProvider>
             </BrowserRouter>
           </QueryClientProvider>
-        </ChakraProvider>
-      </ErrorBoundary>
+        </ErrorBoundary>
+      </ChakraProvider>
     </Suspense>
   );
 }

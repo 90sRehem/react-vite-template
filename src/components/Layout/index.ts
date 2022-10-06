@@ -1,1 +1,1 @@
-export * from "./ContentLayout";
+export * from "./AppLayoutWrapper";

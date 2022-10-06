@@ -1,5 +1,6 @@
-import { IconType } from "@/lib/react-icons";
 import { RouteObject } from "@/lib/react-router-dom";
+
+import { IconType } from "react-icons";
 
 export interface IRoutes extends RouteObject {
   navSize?: string;
@@ -39,4 +40,23 @@ export interface IAPIResponse<T> {
   success: boolean;
   message: string;
   data: T;
+}
+
+export interface INavItemProps {
+  icon: IconType;
+  title: string;
+  description?: string;
+  url: string;
+  isOpen?: boolean;
+  active?: boolean;
+}
+
+export interface INavHoverProps {
+  title: string;
+  icon: IconType;
+  description: string;
+}
+
+export interface INavItems {
+  items: INavItemProps[];
 }

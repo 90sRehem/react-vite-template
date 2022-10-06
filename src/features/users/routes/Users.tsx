@@ -15,10 +15,8 @@ function ErrorFallback() {
 
 export function Users() {
   return (
-    <ContentLayout goBackButton>
-      <ErrorBoundary FallbackComponent={ErrorFallback}>
-        <UsersList />
-      </ErrorBoundary>
-    </ContentLayout>
+    <ErrorBoundary FallbackComponent={ErrorFallback}>
+      <UsersList />
+    </ErrorBoundary>
   );
 }

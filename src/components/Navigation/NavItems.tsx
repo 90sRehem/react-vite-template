@@ -1,7 +1,7 @@
 import { useLocation } from "@/lib/react-router-dom";
 import { Fragment } from "react";
+import { INavItems } from "@/types";
 import { NavItem } from "./NavItem";
-import { INavItems } from "./types";
 
 export function NavItems({ items }: INavItems) {
   const path = useLocation();
@@ -10,7 +10,7 @@ export function NavItems({ items }: INavItems) {
       {items.map(item => (
         <Fragment key={item.title}>
           <NavItem
-            navSize={item.navSize}
+            isOpen={item.isOpen}
             icon={item.icon}
             title={item.title}
             description={item.description}

@@ -1,4 +1,4 @@
-import { Loader } from "@/components";
+import { Backdrop } from "@/components";
 import { lazyImport } from "@/utils";
 import { Suspense } from "react";
 import { Navigate, Outlet, RouteObject } from "react-router-dom";
@@ -11,7 +11,7 @@ const { AuthRoutes } = lazyImport(
 
 function RoutesContainer() {
   return (
-    <Suspense fallback={<Loader />}>
+    <Suspense fallback={<Backdrop isOpen />}>
       <Outlet />
     </Suspense>
   );
@@ -28,7 +28,7 @@ export const publicRoutes: RouteObject[] = [
         element: <Landing />,
       },
       { path: "auth/*", element: <AuthRoutes /> },
-      { path: "*", element: <Navigate to="/" /> },
+      { path: "*", element: <Navigate to="/" replace /> },
     ],
   },
 ];

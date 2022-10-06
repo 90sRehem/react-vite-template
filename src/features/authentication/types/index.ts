@@ -20,8 +20,10 @@ export type IRegisterValues = {
 };
 
 interface IUser {
+  id: string;
   name: string;
   email: string;
+  avatar?: string | null;
 }
 
 export interface IAuthUser extends IUser {
