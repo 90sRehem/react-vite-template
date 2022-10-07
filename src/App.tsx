@@ -22,7 +22,7 @@ function ErrorFallback() {
 }
 
 export function App() {
-  if (DEV_ENV && FAKE_SERVER) {
+  if (DEV_ENV === true && FAKE_SERVER === true) {
     makeServer();
   }
   return (
