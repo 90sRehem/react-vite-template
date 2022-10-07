@@ -48,5 +48,6 @@ export enum EAuthKeys {
 
 // eslint-disable-next-line no-shadow
 export enum EAuthEndpoints {
-  LOGIN = "auth/login",
+  LOGIN = "v1/session/login",
+  REFRESH_TOKEN = "/v1/session/refresh",
 }
