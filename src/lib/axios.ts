@@ -1,6 +1,7 @@
 import Axios, { AxiosError, AxiosRequestConfig } from "axios";
 import { API_URL } from "@/config";
-import { storage } from "@/utils";
+import { IAuthUser, refresh } from "@/features/authentication";
+import { useAuthStore } from "@/features/authentication/stores/authStore";
 
 export * from "axios";
 
@@ -10,34 +11,34 @@ let failedRequestsQueue: {
   onFailure: (error: AxiosError) => void;
 }[] = [];
 
-function getFromStorage(key: string): {
-  data: any;
-  type?: "local" | "session";
-} {
-  const localValues = storage.getItem({ key, storageType: "local" });
-  const sessionValues = storage.getItem({ key, storageType: "session" });
+// function getFromStorage(key: string): {
+//   data: any;
+//   type?: "local" | "session";
+// } {
+//   const localValues = storage.getItem({ key, storageType: "local" });
+//   const sessionValues = storage.getItem({ key, storageType: "session" });
 
-  if (localValues) {
-    return {
-      data: { ...localValues },
-      type: "local",
-    };
-  }
-  if (sessionValues) {
-    return {
-      data: { ...sessionValues },
-      type: "session",
-    };
-  }
+//   if (localValues) {
+//     return {
+//       data: { ...localValues },
+//       type: "local",
+//     };
+//   }
+//   if (sessionValues) {
+//     return {
+//       data: { ...sessionValues },
+//       type: "session",
+//     };
+//   }
 
-  return { data: null };
-}
+//   return { data: null };
+// }
 
 function authRequestInterceptor(config: AxiosRequestConfig) {
-  const storagedValue = getFromStorage("user");
-
-  if (storagedValue.data) {
-    config.headers.Authorization = `Bearer ${storagedValue.data.token}`;
+  // const storagedValue = getFromStorage("user");
+  const { user } = useAuthStore.getState();
+  if (user?.token) {
+    config.headers.Authorization = `Bearer ${user.token}`;
   }
   config.headers.Accept = "application/json";
   return config;
@@ -59,41 +60,47 @@ axios.interceptors.response.use(
     if (error.response?.status === 401) {
       if (error.response.data.error === "token-expired") {
         const originalConfig = error.config;
-        const { data, type } = getFromStorage("user");
+        const { user, setUser } = useAuthStore.getState();
+        // const { data, type } = getFromStorage("user");
 
         if (!isRefreshing) {
           isRefreshing = true;
-          axios
-            .post("/v1/session/refresh", {
-              refreshToken: data.refreshToken,
-              userId: data.id,
-            })
+          refresh({
+            refreshToken: user?.refreshToken as string,
+            userId: user?.id as string,
+          })
+            // axios
+            //   .post(EAuthEndpoints.REFRESH_TOKEN, {
+            //     refreshToken: user?.refreshToken,
+            //     userId: user?.id,
+            //   })
             .then(response => {
-              const returnedData = response.data.data;
-
-              if (type === "local") {
-                storage.setItem({
-                  key: "user",
-                  values: returnedData,
-                  storageType: "local",
-                });
-              } else if (type === "session") {
-                storage.setItem({
-                  key: "user",
-                  values: returnedData,
-                  storageType: "session",
-                });
-              }
+              const returnedData = response as IAuthUser;
+              setUser(returnedData);
+              // if (type === "local") {
+              //   storage.setItem({
+              //     key: "user",
+              //     values: returnedData,
+              //     storageType: "local",
+              //   });
+              // } else if (type === "session") {
+              //   storage.setItem({
+              //     key: "user",
+              //     values: returnedData,
+              //     storageType: "session",
+              //   });
+              // }
 
               axios.defaults.headers.Authorization = `Bearer ${returnedData.token}`;
               failedRequestsQueue.forEach(request =>
-                request.onSuccess(returnedData.token),
+                request.onSuccess(returnedData.token as string),
               );
               failedRequestsQueue = [];
             })
-            .catch(error => {
-              failedRequestsQueue.forEach(request => request.onFailure(error));
+            .catch(err => {
+              failedRequestsQueue.forEach(request => request.onFailure(err));
               failedRequestsQueue = [];
+              setUser(null);
             })
             .finally(() => {
               isRefreshing = false;
