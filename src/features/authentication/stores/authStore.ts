@@ -7,33 +7,38 @@ import { IAuthCredentials, IAuthUser } from "../types";
 const { toast } = createStandaloneToast();
 
 type ICredentials = Omit<IAuthCredentials, "rememberMe">;
+type ISetUser = IAuthUser | null;
 
-interface IAuthState2 {
+interface IAuthState {
   user: IAuthUser | null;
+  isLoading: boolean;
   login: (credentials: ICredentials, onSuccess: () => void) => Promise<void>;
   logout: () => void;
-  isLoading: boolean;
+  setUser: (user: ISetUser) => void;
 }
 
 export const useAuthStore = create(
-  persist<IAuthState2>(
+  persist<IAuthState>(
     set => ({
       user: null,
       isLoading: false,
       isAuthenticated: false,
+      setUser(user) {
+        set(state => ({ ...state, user }));
+      },
       async login(credentials, onSuccess) {
-        set({ isLoading: true });
+        set(state => ({ ...state, isLoading: true }));
 
         try {
           const response = await authenticate(credentials);
-          set({ user: response });
+          set(state => ({ ...state, user: response }));
           onSuccess();
-          set({ isLoading: false });
-        } catch (error) {
-          set({ isLoading: false });
+          set(state => ({ ...state, isLoading: false }));
+        } catch (error: any) {
+          set(state => ({ ...state, isLoading: false }));
           toast({
             title: "Erro.",
-            description: error?.response?.data?.message,
+            description: error.response.data.message,
             status: "error",
             duration: 9000,
             isClosable: true,
@@ -45,7 +50,7 @@ export const useAuthStore = create(
         }
       },
       logout() {
-        set({ user: null });
+        set(state => ({ ...state, user: null }));
       },
     }),
     {
@@ -53,45 +58,3 @@ export const useAuthStore = create(
     },
   ),
 );
-
-// export function useAuth(): IUseAuthData {
-//   const setUser = useAuthStore(state => state.setUser);
-//   const removeUser = useAuthStore(state => state.removeUser);
-//   const user = useAuthStore(state => state.user);
-//   const toast = useToast();
-
-//   const loginMutation = useMutation(
-//     async (credentials: IAuthCredentials) => {
-//       await authenticate(credentials);
-//     },
-//     {
-//       onError(error, variables, context) {
-//         toast({
-//           title: "Erro.",
-//           description: error?.response?.data?.message,
-//           status: "error",
-//           duration: 9000,
-//           isClosable: true,
-//           position: "top-right",
-//         });
-//       },
-//       onSuccess(data, variables, context) {
-//         setUser(data as unknown as IUser);
-//       },
-//     },
-//   );
-
-//   async function login(credentials: IAuthCredentials, onSuccess: () => void) {
-//     await loginMutation.mutateAsync(credentials);
-//     onSuccess();
-//   }
-
-//   return {
-//     user,
-//     login,
-//     isAuthenticated: Boolean(user),
-//     logout() {
-//       removeUser();
-//     },
-//   };
-// }
