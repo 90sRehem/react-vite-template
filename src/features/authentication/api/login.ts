@@ -1,5 +1,5 @@
 import { axios, AxiosRequestConfig } from "@/lib/axios";
-import { IAuthCredentials, IAuthUser } from "../types";
+import { EAuthEndpoints, IAuthCredentials, IAuthUser } from "../types";
 
 type Credentials = Omit<IAuthCredentials, "rememberMe">;
 
@@ -9,7 +9,7 @@ export async function authenticate({
 }: Credentials): Promise<IAuthUser | null> {
   const config: AxiosRequestConfig<Credentials> = {
     method: "POST",
-    url: "v1/session/login",
+    url: EAuthEndpoints.LOGIN,
     data: { email, password },
   };
   const response = await axios(config);
